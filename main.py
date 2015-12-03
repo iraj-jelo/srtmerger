@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# author: iraj jelodari
+# mail:   iraj.jelo@gmail.com
+
 import datetime
 import re
 
@@ -8,13 +11,14 @@ GREEN = '#B4FF00'
 WHITE = '#FFFFFF'
 YELLOW = '#FFEB00'
 
+TIME_PATTERN = r'\d{1,2}:\d{1,2}:\d{1,2},\d{1,5} --> \d{1,2}:\d{1,2}:\d{1,2},\d{1,5}\r\n'
+
 class Merger():
     """
     SRT Merger allows you to merge subtitle files, no matter what language
     are the subtitles encoded in. The result of this merge will be a new subtitle
     file which will display subtitles from each merged file.
     """
-
     def __init__(self, path="~", output_file_name='subtitle_name.srt'):
         self.subtitles = []
         self.timestamps = []
@@ -39,7 +43,13 @@ class Merger():
                 text += t+'\n'
             text = text if color == None else '<font color="%s">%s</font>'%(color, text)
             text_and_time = '%s\n%s\n'%(time, text)
-            subtitle['dialogs'][timestamp] = text_and_time
+            # Previuos dialog for same timestamp
+            prev_dialog_for_same_timestamp = subtitle['dialogs'][timestamp] = subtitle['dialogs'].get(timestamp, '')
+            prev_dialog_without_timestamp = re.sub(TIME_PATTERN, '', prev_dialog_for_same_timestamp)
+            if re.findall(TIME_PATTERN, text_and_time):
+                time = re.findall(TIME_PATTERN, text_and_time)[0]
+                
+            subtitle['dialogs'][timestamp] = text_and_time + prev_dialog_without_timestamp
             self.timestamps.append(timestamp)
 
 
@@ -84,10 +94,8 @@ class Merger():
                     dialog = byteOfCunt+'\n'.encode("utf-16-le")+line
                     self.lines.append(dialog)
                     cunt += 1
-
         if self.lines[-1].endswith(b'\x00\n\x00'):
             self.lines[-1] = self.lines[-1][:-3]+b'\x00'
-                        
         with  open(self.output_file_name, 'w', encoding="utf-16-le") as output:
             output.buffer.writelines(self.lines)
             print('"%s/%s"'%(self.path, self.output_file_name) ,'created. successfully.',)
@@ -95,7 +103,7 @@ class Merger():
 
 
 ## How to use?
-#m = Merger(output_file_name="new.srt")
-#m.add('fa.srt', codec="utf-16-le")
-#m.add('en.srt')
-#m.merge()
+##m = Merger(output_file_name="new.srt")
+##m.add('en.srt')
+##m.add('fa.srt', color="yellow", codec="windows-1256")
+##m.merge()
