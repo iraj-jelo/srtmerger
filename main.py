@@ -63,7 +63,6 @@ class Merger():
             dialogs = re.split('\n\r\n',data)
             subtitle['data'] = data
             subtitle['raw_dialogs'] = dialogs
-            #print('split subtitle: ', id(subtitle), subtitle['codec'])
             self._split_dialogs(dialogs, subtitle, color)
             self.subtitles.append(subtitle)
 
@@ -88,7 +87,6 @@ class Merger():
                     cunt += 1
 
         if self.lines[-1].endswith(b'\x00\n\x00'):
-            #print('remove endline last of file.')
             self.lines[-1] = self.lines[-1][:-3]+b'\x00'
                         
         with  open(self.output_file_name, 'w', encoding="utf-16-le") as output:
