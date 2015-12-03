@@ -1,5 +1,4 @@
-__author__ ="iraj jelodari"
-__mail__ = "iraj.jelo@gmail.com"
+#!/usr/bin/env python
 import datetime
 import re
 
