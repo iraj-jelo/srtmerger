@@ -5,6 +5,6 @@ SRT Merger allows you to merge subtitle files, no matter what language are the s
 
 ## How to works?
     m = Merger(output_file_name="new.srt")
-    m.add('fa.srt', codec="utf-16-le")
+    m.add('fa.srt', color="yellow", codec="windows-1256")
     m.add('en.srt')
     m.merge()
