@@ -40,7 +40,7 @@ class Merger():
             time = text_and_time.split('\n')[0]
             text = ""
             for t in texts:
-                text += t+'\n'
+                text += t + '\n'
             text = text if color == None else '<font color="%s">%s</font>'%(color, text)
             text_and_time = '%s\n%s\n'%(time, text)
             # Previuos dialog for same timestamp
@@ -84,18 +84,18 @@ class Merger():
         for t in self.timestamps:
             for sub in self.subtitles:
                 if t in sub['dialogs'].keys():
-                    line = self.encode(sub['dialogs'][t].replace('\n\n',''))
+                    line = self.encode(sub['dialogs'][t].replace('\n\n', ''))
                     if count == 1:
-                        byteOfCount = b'\xff\xfe'+bytes(str(count),encoding="utf-16-le")
+                        byteOfCount = b'\xff\xfe' + bytes(str(count), encoding="utf-16-le")
                     else:
-                        byteOfCount = '\n'.encode("utf-16-le")+bytes(str(count),encoding="utf-16-le")
+                        byteOfCount = '\n'.encode("utf-16-le") + bytes(str(count), encoding="utf-16-le")
                     if sub['dialogs'][t].endswith('\n') != True:
-                        sub['dialogs'][t] = sub['dialogs'][t]+'\n'
-                    dialog = byteOfCount+'\n'.encode("utf-16-le")+line
+                        sub['dialogs'][t] = sub['dialogs'][t] + '\n'
+                    dialog = byteOfCount + '\n'.encode("utf-16-le") + line
                     self.lines.append(dialog)
                     count += 1
         if self.lines[-1].endswith(b'\x00\n\x00'):
-            self.lines[-1] = self.lines[-1][:-3]+b'\x00'
+            self.lines[-1] = self.lines[-1][:-3] + b'\x00'
         with  open(self.output_file_name, 'w', encoding="utf-16-le") as output:
             output.buffer.writelines(self.lines)
             print('"%s/%s"'%(self.path, self.output_file_name) ,'created. successfully.',)
