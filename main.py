@@ -80,20 +80,20 @@ class Merger():
         self.lines = []
         self.timestamps = list(set(self.timestamps))
         self.timestamps.sort()
-        cunt = 1
+        count = 1
         for t in self.timestamps:
             for sub in self.subtitles:
                 if t in sub['dialogs'].keys():
                     line = self.encode(sub['dialogs'][t].replace('\n\n',''))
-                    if cunt == 1:
-                        byteOfCunt = b'\xff\xfe'+bytes(str(cunt),encoding="utf-16-le")
+                    if count == 1:
+                        byteOfCount = b'\xff\xfe'+bytes(str(count),encoding="utf-16-le")
                     else:
-                        byteOfCunt = '\n'.encode("utf-16-le")+bytes(str(cunt),encoding="utf-16-le")
+                        byteOfCount = '\n'.encode("utf-16-le")+bytes(str(count),encoding="utf-16-le")
                     if sub['dialogs'][t].endswith('\n') != True:
                         sub['dialogs'][t] = sub['dialogs'][t]+'\n'
-                    dialog = byteOfCunt+'\n'.encode("utf-16-le")+line
+                    dialog = byteOfCount+'\n'.encode("utf-16-le")+line
                     self.lines.append(dialog)
-                    cunt += 1
+                    count += 1
         if self.lines[-1].endswith(b'\x00\n\x00'):
             self.lines[-1] = self.lines[-1][:-3]+b'\x00'
         with  open(self.output_file_name, 'w', encoding="utf-16-le") as output:
