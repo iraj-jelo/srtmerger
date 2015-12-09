@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# author: iraj jelodari
-# mail:   iraj.jelo@gmail.com
-
+# author: iraj jelodari <iraj.jelo@gmail.com>
 import datetime
 import re
 
@@ -33,7 +31,10 @@ class Merger():
                 dialog = dialog.replace('\r\n', '',1)
             if dialog == '':
                 continue
-            time = dialog.split('\n',2)[1].split('-->')[0].split(',')[0]
+            try:
+                time = dialog.split('\n',2)[1].split('-->')[0].split(',')[0]
+            except Exception as e:
+                continue
             timestamp = datetime.datetime.strptime(time,'%H:%M:%S').timestamp()
             text_and_time = dialog.split('\n',1)[1]
             texts = text_and_time.split('\n')[1:]
@@ -99,7 +100,6 @@ class Merger():
         with  open(self.output_file_name, 'w', encoding="utf-16-le") as output:
             output.buffer.writelines(self.lines)
             print('"%s/%s"'%(self.path, self.output_file_name) ,'created. successfully.',)
-
 
 
 ## How to use?
