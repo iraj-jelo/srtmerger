@@ -54,7 +54,7 @@ class Merger():
             self.timestamps.append(timestamp)
 
 
-    def encode(self, text, codec="utf-16-le"):
+    def _encode(self, text, codec="utf-16-le"):
         try:
             return bytes(text, encoding='utf-16-le')
         except Exception as e:
@@ -85,7 +85,7 @@ class Merger():
         for t in self.timestamps:
             for sub in self.subtitles:
                 if t in sub['dialogs'].keys():
-                    line = self.encode(sub['dialogs'][t].replace('\n\n', ''))
+                    line = self._encode(sub['dialogs'][t].replace('\n\n', ''))
                     if count == 1:
                         byteOfCount = b'\xff\xfe' + bytes(str(count), encoding="utf-16-le")
                     else:
