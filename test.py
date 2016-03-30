@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 from main import Merger
 
 ## How to use?
