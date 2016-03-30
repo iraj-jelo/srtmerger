@@ -76,7 +76,6 @@ class Merger():
                     }
         with open(subtitle_address, 'r') as file:
             data = file.buffer.read().decode(codec)
-            #print('data:\n', repr(data) ) #remove
             dialogs = re.split('\r\n\r|\n\n',data)
             subtitle['data'] = data
             subtitle['raw_dialogs'] = dialogs
