@@ -52,10 +52,8 @@ class Merger():
             # Previuos dialog for same timestamp
             prev_dialog_for_same_timestamp = subtitle['dialogs'][timestamp] = subtitle['dialogs'].get(timestamp, '')
             prev_dialog_without_timestamp = re.sub(TIME_PATTERN, '', prev_dialog_for_same_timestamp)
-
             if re.findall(TIME_PATTERN, text_and_time):
                 time = re.findall(TIME_PATTERN, text_and_time)[0]
-                
             subtitle['dialogs'][timestamp] = text_and_time + prev_dialog_without_timestamp
             self.timestamps.append(timestamp)
 
@@ -98,7 +96,6 @@ class Merger():
                         byteOfCount = '\n'.encode("utf-16-le") + bytes(str(count), encoding="utf-16-le")
                     if sub['dialogs'][t].endswith('\n') != True:
                         sub['dialogs'][t] = sub['dialogs'][t] + '\n'
-                    #print('##t:', t, repr(sub['dialogs'][t]))
                     dialog = byteOfCount + '\n'.encode("utf-16-le") + line
                     self.lines.append(dialog)
                     count += 1
@@ -107,7 +104,6 @@ class Merger():
         with  open(self.output_file_name, 'w', encoding="utf-16-le") as output:
             output.buffer.writelines(self.lines)
             print('"%s/%s"'%(self.path, self.output_file_name) ,'created. successfully.',)
-
 
 
 ## How to use?
