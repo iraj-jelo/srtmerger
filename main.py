@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# author: iraj jelodari <iraj.jelo@gmail.com>
+# author: iraj jelodari
+# mail:   iraj.jelo@gmail.com
 
 import datetime
 import re
@@ -25,15 +26,19 @@ class Merger():
         self.output_file_name  = output_file_name
         self.lines=[]
 
+
     def _split_dialogs(self, dialogs, subtitle, color=None):
         for dialog in dialogs:
             if dialog.startswith('\r\n'):
                 dialog = dialog.replace('\r\n', '',1)
+            if dialog.startswith('\n'):
+                dialog = dialog[1:]
             if dialog == '':
                 continue
             try:
                 time = dialog.split('\n',2)[1].split('-->')[0].split(',')[0]
             except Exception as e:
+                #print('An error in dialog: ', repr(dialog),'\n', e)
                 continue
             timestamp = datetime.datetime.strptime(time,'%H:%M:%S').timestamp()
             text_and_time = dialog.split('\n',1)[1]
@@ -47,10 +52,13 @@ class Merger():
             # Previuos dialog for same timestamp
             prev_dialog_for_same_timestamp = subtitle['dialogs'][timestamp] = subtitle['dialogs'].get(timestamp, '')
             prev_dialog_without_timestamp = re.sub(TIME_PATTERN, '', prev_dialog_for_same_timestamp)
+
             if re.findall(TIME_PATTERN, text_and_time):
                 time = re.findall(TIME_PATTERN, text_and_time)[0]
+                
             subtitle['dialogs'][timestamp] = text_and_time + prev_dialog_without_timestamp
             self.timestamps.append(timestamp)
+
 
     def _encode(self, text, codec="utf-16-le"):
         try:
@@ -58,6 +66,7 @@ class Merger():
         except Exception as e:
             print(b'Problem in "%s" to encoing by %s. \nError: %s'%(text, codec, e))
             return b'Problem in "%s" to encoing by %s'%(text, codec)
+
 
     def add(self, subtitle_address, codec="utf-8", color=WHITE):
         subtitle = {'address':subtitle_address,
@@ -67,11 +76,13 @@ class Merger():
                     }
         with open(subtitle_address, 'r') as file:
             data = file.buffer.read().decode(codec)
-            dialogs = re.split('\n\r\n',data)
+            #print('data:\n', repr(data) ) #remove
+            dialogs = re.split('\r\n\r|\n\n',data)
             subtitle['data'] = data
             subtitle['raw_dialogs'] = dialogs
             self._split_dialogs(dialogs, subtitle, color)
             self.subtitles.append(subtitle)
+
 
     def merge(self):
         self.lines = []
@@ -88,6 +99,7 @@ class Merger():
                         byteOfCount = '\n'.encode("utf-16-le") + bytes(str(count), encoding="utf-16-le")
                     if sub['dialogs'][t].endswith('\n') != True:
                         sub['dialogs'][t] = sub['dialogs'][t] + '\n'
+                    #print('##t:', t, repr(sub['dialogs'][t]))
                     dialog = byteOfCount + '\n'.encode("utf-16-le") + line
                     self.lines.append(dialog)
                     count += 1
@@ -98,8 +110,9 @@ class Merger():
             print('"%s/%s"'%(self.path, self.output_file_name) ,'created. successfully.',)
 
 
+
 ## How to use?
-##m = Merger(output_file_name="new.srt")
-##m.add('en.srt')
-##m.add('fa.srt', color="yellow", codec="windows-1256")
-##m.merge()
+#m = Merger(output_file_name="new.srt")
+#m.add('./test_srt/en.srt')
+#m.add('./test_srt/fa.srt', color="yellow", codec="cp1256")
+#m.merge()
