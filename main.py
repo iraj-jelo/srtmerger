@@ -26,7 +26,6 @@ class Merger():
         self.output_file_name  = output_file_name
         self.lines=[]
 
-
     def _split_dialogs(self, dialogs, subtitle, color=None):
         for dialog in dialogs:
             if dialog.startswith('\r\n'):
@@ -57,14 +56,12 @@ class Merger():
             subtitle['dialogs'][timestamp] = text_and_time + prev_dialog_without_timestamp
             self.timestamps.append(timestamp)
 
-
     def _encode(self, text, codec="utf-16-le"):
         try:
             return bytes(text, encoding='utf-16-le')
         except Exception as e:
             print(b'Problem in "%s" to encoing by %s. \nError: %s'%(text, codec, e))
             return b'Problem in "%s" to encoing by %s'%(text, codec)
-
 
     def add(self, subtitle_address, codec="utf-8", color=WHITE):
         subtitle = {'address':subtitle_address,
@@ -79,7 +76,6 @@ class Merger():
             subtitle['raw_dialogs'] = dialogs
             self._split_dialogs(dialogs, subtitle, color)
             self.subtitles.append(subtitle)
-
 
     def merge(self):
         self.lines = []
@@ -104,7 +100,6 @@ class Merger():
         with  open(self.output_file_name, 'w', encoding="utf-16-le") as output:
             output.buffer.writelines(self.lines)
             print('"%s/%s"'%(self.path, self.output_file_name) ,'created. successfully.',)
-
 
 ## How to use?
 #m = Merger(output_file_name="new.srt")
