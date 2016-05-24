@@ -85,7 +85,7 @@ class Merger():
             self.subtitles.append(subtitle)
 
 
-    def get_absolute_output_path(self):
+    def get_output_path(self):
         if self.output_path.endswith('/'):
             return self.output_path + self.output_name
         return self.output_path + '/' + self.output_name
@@ -115,7 +115,7 @@ class Merger():
             self.lines[-1] = self.lines[-1][:-1]+ b''
         if self.lines[0].startswith(b'\xff\xfe'):
             self.lines[0] = self.lines[0][2:]
-        with  open(self.get_absolute_output_path(), 'w', encoding=self.output_encoding) as output:
+        with  open(self.get_output_path(), 'w', encoding=self.output_encoding) as output:
             output.buffer.writelines(self.lines)
             print('(%s)'%(output.name) ,'created successfully.',)
 
