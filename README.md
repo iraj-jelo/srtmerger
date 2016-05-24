@@ -4,7 +4,7 @@ subtitle merger is a tool for merging two or more subtitles for videos.
 SRT Merger allows you to merge subtitle files, no matter what language are the subtitles encoded in. The result of this merge will be a new subtitle file which will display subtitles from each merged file.
 
 ## How to works?
-    m = Merger(output_file_name="new.srt")
+    m = Merger(output_name="new.srt")
     m.add('fa.srt', color="yellow", codec="windows-1256")
     m.add('en.srt')
     m.merge()
