@@ -2,6 +2,7 @@
 # author: iraj jelodari
 
 import datetime
+import codecs
 import re
 
 RED = '#FF003B'
@@ -25,6 +26,28 @@ class Merger():
         self.output_path = output_path
         self.output_name = output_name
         self.output_encoding = output_encoding
+
+
+    def _insert_bom(self, content, encoding):
+        encoding = encoding.replace('-','')\
+                   .replace('_','')\
+                   .replace(' ','')\
+                   .upper()
+        if encoding in ['UTF64LE', 'UTF16', 'UTF16LE']:
+            return codecs.BOM + content
+        if encoding in ['UTF8']:
+            return codecs.BOM_UTF8 + content   
+        if encoding in ['UTF32LE']:
+            return codecs.BOM_UTF32_LE + content
+        if encoding in ['UTF64BE']:
+            return codecs.BOM_UTF64_BE + content
+        if encoding in ['UTF16BE']:
+            return codecs.BOM_UTF32_BE + content
+        if encoding in ['UTF32BE']:
+            return codecs.BOM_UTF32_BE + content
+        if encoding in ['UTF32']:
+            return codecs.BOM_UTF32 + content
+        return content
 
 
     def _split_dialogs(self, dialogs, subtitle, color=None):
@@ -71,11 +94,12 @@ class Merger():
 
 
     def add(self, subtitle_address, codec="utf-8", color=WHITE):
-        subtitle = {'address':subtitle_address,
-                    'codec':codec,
-                    'color':color,
-                    'dialogs': {}
-                    }
+        subtitle = {
+            'address':subtitle_address,
+            'codec':codec,
+            'color':color,
+            'dialogs': {}
+            }
         with open(subtitle_address, 'r') as file:
             data = file.buffer.read().decode(codec)
             dialogs = re.split('\r\n\r|\n\n',data)
@@ -101,7 +125,10 @@ class Merger():
                 if t in sub['dialogs'].keys():
                     line = self._encode(sub['dialogs'][t].replace('\n\n', ''))
                     if count == 1:
-                        byteOfCount = b'\xff\xfe' + bytes(str(count), encoding=self.output_encoding)
+                        byteOfCount = self._insert_bom(
+                            bytes(str(count), encoding=self.output_encoding),
+                            self.output_encoding
+                            )
                     else:
                         byteOfCount = '\n'.encode(self.output_encoding) + bytes(str(count), encoding=self.output_encoding)
                     if sub['dialogs'][t].endswith('\n') != True:
@@ -113,11 +140,9 @@ class Merger():
             self.lines[-1] = self.lines[-1][:-3] + b'\x00'
         if self.lines[-1].endswith(b'\n'):
             self.lines[-1] = self.lines[-1][:-1]+ b''
-        if self.lines[0].startswith(b'\xff\xfe'):
-            self.lines[0] = self.lines[0][2:]
         with  open(self.get_output_path(), 'w', encoding=self.output_encoding) as output:
             output.buffer.writelines(self.lines)
-            print('(%s)'%(output.name) ,'created successfully.',)
+            print("'%s'"%(output.name) ,'created successfully.')
 
 
 ## How to use?
