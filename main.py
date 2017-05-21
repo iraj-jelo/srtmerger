@@ -56,7 +56,7 @@ class Merger():
                 dialog = dialog.replace('\r\n', '',1)
             if dialog.startswith('\n'):
                 dialog = dialog[1:]
-            if dialog == '' or dialog == '\n':
+            if dialog == '' or dialog == '\n' or dialog.rstrip().lstrip() == '':
                 continue
             try:
                 if dialog.startswith('\r\n'):
