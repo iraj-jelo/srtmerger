@@ -57,7 +57,13 @@ class Merger():
         return '<font color="{!s}">{!s}</font>'.format(
             color, subtitle) if color else subtitle
 
-    def _split_dialogs(self, dialogs, subtitle, color=None):
+    def _put_subtitle_top(self, subtitle):
+        """
+        Put the subtitle at the top of the screen 
+        """
+        return '{\\an8}' + subtitle
+
+    def _split_dialogs(self, dialogs, subtitle, color=None, top=False):
         for dialog in dialogs:
             if dialog.startswith('\r\n'):
                 dialog = dialog.replace('\r\n', '', 1)
@@ -82,6 +88,8 @@ class Merger():
             if text == '' or text == '\n':
                 continue
             text = self._set_subtitle_color(text, color)
+            if top is True:
+                text = self._put_subtitle_top(text)
             text_and_time = '%s\n%s\n' % (time, text)
             # Previuos dialog for same timestamp
             prev_dialog_for_same_timestamp = subtitle['dialogs'][timestamp] = subtitle['dialogs'].get(
@@ -103,7 +111,7 @@ class Merger():
                   (repr(text), codec, e))
             return b'An error has been occured in encoing by specifed `output_encoding`'
 
-    def add(self, subtitle_address, codec="utf-8", color=WHITE):
+    def add(self, subtitle_address, codec="utf-8", color=WHITE, top=False):
         subtitle = {
             'address': subtitle_address,
             'codec': codec,
@@ -115,7 +123,7 @@ class Merger():
             dialogs = re.split('\r\n\r|\n\n', data)
             subtitle['data'] = data
             subtitle['raw_dialogs'] = dialogs
-            self._split_dialogs(dialogs, subtitle, color)
+            self._split_dialogs(dialogs, subtitle, color, top)
             self.subtitles.append(subtitle)
 
     def get_output_path(self):
@@ -159,5 +167,5 @@ class Merger():
 #
 # m = Merger(output_name="new.srt")
 # m.add('./test_srt/en.srt')
-# m.add('./test_srt/fa.srt', color="yellow", codec="cp1256")
+# m.add('./test_srt/fa.srt', color="yellow", codec="cp1256", top=True)
 # m.merge()
