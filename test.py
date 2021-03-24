@@ -11,7 +11,7 @@ class TestSrtMerger(unittest.TestCase):
     def test_merge(self):
         merger = Merger(output_name=self.filename, output_encoding="utf-16-le")
         merger.add('./test_assets/en.srt') # utf8 as default codec, white as default color
-        merger.add('./test_assets/fa.srt', color="yellow", codec="cp1256")
+        merger.add('./test_assets/fa.srt', color="yellow", codec="cp1256", top=True)
         merger.merge()
         self.assertTrue(os.path.isfile(self.filename))
 
