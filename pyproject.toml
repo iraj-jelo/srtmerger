@@ -11,7 +11,7 @@ authors = [
 ]
 description = "SrtMerger is a tool to merge two or more subtitle (.srt) files together."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
