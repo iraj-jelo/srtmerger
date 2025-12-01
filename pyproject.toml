@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = 'srtmerger'
+dependencies = []
+dynamic = ["version"]
+authors = [
+  { name="Iraj Jelodari", email="Iraj.Jelo@gmail.com" },
+]
+description = "SrtMerger is a tool to merge two or more subtitle (.srt) files together."
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+keywords = ["srt", ".srt file", "subtitle", "merge", "combine", "concatenate", "join", "subtitles"]
+
+[project.urls]
+Homepage = "https://github.com/iraj-jelo/srtmerger"
+Issues = "https://github.com/iraj-jelo/srtmerger/issues"
+
+[project.optional-dependencies]
+test = [
+    "pre-commit==4.2.0",
+    "ruff==0.11.12",
+]
+deploy = [
+    "hatchling==1.26",
+    "twine"
+]
+
+[tool.hatch.version]
+path = "src/srtmerger/main.py"
+
+[project.scripts]
+srtmerger = "srtmerger.main:main"
+sm = "srtmerger.main:main"
+
+[tool.ruff.lint.pyflakes]
