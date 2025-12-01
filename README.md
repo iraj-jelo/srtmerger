@@ -29,6 +29,19 @@ pip install srtmerger
 
 ## Usage
 
+### Python
+Running in your Python script:
+
+```Python
+ from srtmerger import Merger
+
+
+ m = Merger(output_path="new.srt")
+ m.add('fa.srt', color="yellow", encoding="windows-1256")
+ m.add('en.srt')
+ m.merge()
+```
+
 ### Bash
 The basic syntax is:
 ```bash
@@ -67,20 +80,6 @@ srtmerger sub1.srt:e=utf-8:c=yellow:top sub2.srt:c=blue -o output.srt
 3. Use global defaults with some overrides:
 ```bash
 srtmerger -o output.srt -E utf-8 -C white sub1.srt sub2.srt:color=blue
-```
-
-
-### Python
-Running in your Python script:
-
-```Python
- from srtmerger import Merger
-
-
- m = Merger(output_path="new.srt")
- m.add('fa.srt', color="yellow", encoding="windows-1256")
- m.add('en.srt')
- m.merge()
 ```
 
 ## Development
