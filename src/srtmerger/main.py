@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from .merger import Merger
 
 
-version = "0.1.0"
+version = "0.1.1"
 
 
 @dataclass
