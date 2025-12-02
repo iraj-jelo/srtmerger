@@ -137,3 +137,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Support for custom colors and positioning
 - File encoding options
 - Command-line interface
+
+### [0.1.1] - 2025-02-12
+- Bug fix for importing `Color` and `Merger` classes in Python
